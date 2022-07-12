@@ -5,9 +5,9 @@ import pandas as pd
 from result import result,gpa
 from css import css
 
-pay='''<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JqtXEdNSna9bQw" async> </script> </form>'''
+#pay='''<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_JqtXEdNSna9bQw" async> </script> </form>'''
 
-st.set_page_config(page_title="Loyola Academy Result Page", page_icon="random", layout="wide", initial_sidebar_state="expanded", menu_items=None)
+st.set_page_config(page_title="Loyola Academy Results", page_icon="icon.png", layout="wide", initial_sidebar_state="expanded", menu_items=None)
 
 selection=option_menu(None, [ "Result","Ranking","CGPA Calculator","Suggestions"],menu_icon="cast",default_index=0,orientation="horizontal")
 
@@ -26,18 +26,19 @@ if selection=="Result":
                     details_df.columns,result_df.columns = details_df.iloc[0],result_df.iloc[0]
                     details_df,result_df = details_df[1:],result_df[1:]
                     
-                    st.markdown(css, unsafe_allow_html=True)
+                    st.markdown(css(), unsafe_allow_html=True)
                     st.table(details_df)
                     st.table(result_df)
-                    st.markdown(pay, unsafe_allow_html=True)
+                    #st.markdown(pay, unsafe_allow_html=True)
+                    try:
+                        int(txt)
+                        s,g=gpa(txt,1)
+                        st.subheader(f"Your SGPA is {g} in {s} semester")
+                    except:
+                        st.error("Couldn't calculate your GPA")
                 except:
                     st.error("Enter a valid UID")
-                try:
-                    int(txt)
-                    s,g=gpa(txt,1)
-                    st.subheader(f"Your SGPA is {g} in {s} semester")
-                except:
-                    st.error("Couldn't calculate your GPA")
+                
             else:
                 st.error("Enter a valid UID")
 
@@ -45,28 +46,27 @@ if selection=="Result":
 
         
     
-
 if selection=="CGPA Calculator":
     st.title("CGPA Calculator")
 
-    sem=st.slidebar("Select your semester for which you want to calculate your CGPA",[1,2,3,4,5,6])
+    sem=st.slider("Select your semester for which you want to calculate your CGPA",min_value=1,max_value=6,value=1)
+    first_sgpa,second_sgpa,third_sgpa,fourth_sgpa,fifth_sgpa,sixth_sgpa=0,0,0,0,0,0
     if sem>=1:
-        first_sgpa=st.number_input("Enter your 1 sem SGPA:",min_value=0.0,max_value=10.0,value=0)
+        first_sgpa=st.number_input("Enter your 1 sem SGPA:",min_value=0.0,max_value=10.0,value=0.0)
         if sem>=2:
-            second_sgpa=st.number_input("Enter your 2 sem SGPA:",min_value=0,max_value=10.0,value=0)
+            second_sgpa=st.number_input("Enter your 2 sem SGPA:",min_value=0.0,max_value=10.0,value=0.0)
             if sem>=3:
-                third_sgpa=st.number_input("Enter your 3 sem SGPA:",min_value=0,max_value=10.0,value=0)
+                third_sgpa=st.number_input("Enter your 3 sem SGPA:",min_value=0.0,max_value=10.0,value=0.0)
                 if sem>=4:
-                    four_sgpa=st.number_input("Enter your 4 sem SGPA:",min_value=0,max_value=10.0,value=0)
+                    fourth_sgpa=st.number_input("Enter your 4 sem SGPA:",min_value=0.0,max_value=10.0,value=0.0)
                     if sem>=5:
-                        five_sgpa=st.number_input("Enter your 5 sem SGPA:",min_value=0,max_value=10.0,value=0)
+                        fifth_sgpa=st.number_input("Enter your 5 sem SGPA:",min_value=0.0,max_value=10.0,value=0.0)
                         if sem>=6:
-                            six_sgpa=st.number_input("Enter your 6 sem SGPA:",min_value=0,max_value=10.0,value=0)
+                            sixth_sgpa=st.number_input("Enter your 6 sem SGPA:",min_value=0.0,max_value=10.0,value=0.0)
 
     if st.button('Calculate'):
-        sum=first_sgpa+second_sgpa+third_sgpa+four_sgpa+five_sgpa+six_sgpa
+        sum=first_sgpa+second_sgpa+third_sgpa+fourth_sgpa+fifth_sgpa+sixth_sgpa
         st.subheader(f"Your CGPA is {str(sum/sem)[:4]} (approx)")
-        st.markdown(pay, unsafe_allow_html=True)
     
     
 
@@ -97,7 +97,7 @@ if selection=="Ranking":
                     index=index[0]+1
                 st.markdown(css(index), unsafe_allow_html=True)
                 st.table(final)
-                st.markdown(pay, unsafe_allow_html=True)
+                #st.markdown(pay, unsafe_allow_html=True)
             except:
                 st.error("Enter valid UIDs")
 
