@@ -79,7 +79,7 @@ if selection=="Ranking":
                 roll=int(uid[-3:])
                 zero=int(uid)-roll
                 start=zero+1
-                end=zero+62
+                end=zero+130
             
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     res=list(executor.map(gpa,range(start,end+1)))
